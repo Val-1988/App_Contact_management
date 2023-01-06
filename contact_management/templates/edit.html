@@ -1,9 +1,11 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="style-edit.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'style-edit.css' %}">
 	
 	<link rel="preconnect" href="https://fonts.gstatic.com">
 	<link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
@@ -21,8 +23,8 @@
 			</a>
 
 			<div class="hero-info">
-				<h1 class="name">Jane Doe</h1>
-				<p class="relationship-hero">Friend</p>
+				<h1 class="first_name">{{ contact.first_name | title }}</h1>
+				<p class="second_name">{{ contact.second_name | title }}</p>
 			</div>
 		</header>
 
@@ -30,7 +32,8 @@
 
 			<div class="info-line">
 				<i class="fas fa-phone icon-gradient"></i>
-				<input type="text" class="type" name="fullname" placeholder="Full Name">
+				<input type="text" class="type" name="first_name" placeholder="Фамилия"
+					value="{{ contact.first_name}}">
 			</div>
 
 			<div class="info-line">
