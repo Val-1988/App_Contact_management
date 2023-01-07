@@ -1,15 +1,23 @@
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from .models import Contact
+from django.db.models import CharField, Value
+from django.db.models.functions import Concat
 
 
 # Create your views here.
 
 def index(request):
     contacts = Contact.objects.all()
-    # search_input = request.GET.get('search-area')
-    # if search_input:
-    # contacts = Contact.objects.filter(first_name_icontains=search_input)
-    return render(request, 'index.html', {"contacts": contacts})
+    search_input = request.GET.get('search-area')
+    if search_input:
+        contacts = Contact.objects.annotate \
+            (full_name=Concat('first_name', Value(' '), 'second_name', output_field=CharField())
+             ).filter(Q(first_name=search_input, second_name=search_input, full_name=search_input, _connector=Q.OR))
+    else:
+        contacts = Contact.objects.all()
+        search_input = ""
+    return render(request, 'index.html', {"contacts": contacts, "search_input": search_input})
 
 
 def addContact(request):
@@ -45,7 +53,7 @@ def editContact(request, pk):
         contact.email = request.POST["email"]
         contact.phone_number = request.POST["phone_number"]
         contact.save()
-        return redirect("/profile/"+str(contact.id))
+        return redirect("/profile/" + str(contact.id))
     return render(request, "edit.html", {"contact": contact})
 
 
@@ -54,5 +62,5 @@ def deleteContact(request, pk):
 
     if request.method == "POST":
         contact.delete()
-        return redirect ('/')
+        return redirect("/")
     return render(request, "delete.html", {"contact": contact})
