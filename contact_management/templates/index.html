@@ -19,15 +19,34 @@
 	<div class="container">
 		<!--  SEARCH FORM -->
 		<header class="header">
-			
-			<form action="/" method="GET" class="search-bar">
+
+
+			<form action="/" method="GET" class="search-bar" id="search-form">
+
+				{{my_filter.form.as_p}}
+				<button name="field_name" value="submitted_value">Filter</button>
+
+
 				<input type="search-name" class="contact-search" name="search-area" placeholder="ПОИСК"
 				value="{{ search_input }}">
+
+				<i onclick="document.getElementById('search-form').submit();" style="padding-left: 5px;"
+						class="fas fa-search"></i>
+
+				<!--  ADD-CONTACT BUTTON/ICON -->
+			<a href="{% url 'add_contact' %}"><i class="fas fa-plus-circle add"></i></a>
+
 			</form>
 
-			<!--  ADD-CONTACT BUTTON/ICON -->
-			<a href="{% url 'add_contact' %}"><i class="fas fa-plus-circle add"></i></a>
+			{% for obj in my_filter.qs %}
+				{{ obg.position }} {{ obg.organization }}<br />
+			{% endfor %}
+
 		</header>
+
+
+
+
 
 		<!--  CONTACT LIST -->
 		<section class="contacts-library">
@@ -56,4 +75,3 @@
 
 			</ul>
 		</section>
-	

@@ -3,12 +3,14 @@ from django.shortcuts import render, redirect
 from .models import Contact
 from django.db.models import CharField, Value
 from django.db.models.functions import Concat
+from .filters import ContactFilter
 
 
 # Create your views here.
 
 def index(request):
     contacts = Contact.objects.all()
+
     search_input = request.GET.get('search-area')
     if search_input:
         contacts = Contact.objects.annotate \
@@ -17,7 +19,13 @@ def index(request):
     else:
         contacts = Contact.objects.all()
         search_input = ""
-    return render(request, 'index.html', {"contacts": contacts, "search_input": search_input})
+
+    my_filter = ContactFilter(request.GET, queryset=contacts)
+    # myFilter = ContactFilter(request.GET, queryset=contacts)
+    contacts = my_filter.qs
+    # context = {"myFilter": myFilter, "contacts": contacts, "search_input": search_input,
+    # "contacts_filter": contacts_filter}
+    return render(request, 'index.html', {"my_filter": my_filter, "contacts": contacts, "search_input": search_input})
 
 
 def addContact(request):
